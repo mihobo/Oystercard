@@ -6,4 +6,10 @@ it "has a balance" do
   expect(subject.balance).to eq nil
 end
 
+it "will top up balance" do
+subject.top_up(17)
+expect(subject.balance).to eq 17
+
+
+end
 end
