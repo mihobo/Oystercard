@@ -1,3 +1,9 @@
-describe Oystercard do
+require "oystercard.rb"
 
-  end
+describe Oystercard do
+it "has a balance" do
+  # oystercard = Oystercard.new
+  expect(subject.balance).to eq nil
+end
+
+end
