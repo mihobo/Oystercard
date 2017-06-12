@@ -1,0 +1,11 @@
+- First issue
+
+NameError:
+  uninitialized constant Oystercard
+
+  # ./spec/oystercard_spec.rb:1:in `<top (required)>'
+
+The error is on line 1
+
+=> It's raised when a given name is invalid or undefined.
+solution: create a new class
