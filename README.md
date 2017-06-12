@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 # Oyster Card Challenge
 
 This challenge works on building a more complex system using skills in Ruby, TDD and object-oriented design.
+=======
+# Oystercard Challenge
+>>>>>>> 9af81a4a239166deb37322b357acd1ab586499f6
 
 ```
 In order to use public transport

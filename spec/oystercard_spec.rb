@@ -1,5 +1,3 @@
-describe Oystercard do
-
 require 'oystercard.rb'
 
 describe Oystercard do
@@ -12,6 +10,10 @@ describe Oystercard do
       oystercard = Oystercard.new(10)
       expect(oystercard.top_up(9)).to eq 19
     end
-  end
 
+    it 'doesn\'t allow to top up beyond the limit' do
+      oystercard = Oystercard.new(20)
+      expect { oystercard.top_up(80) }.to raise_error("Exceeded #{Oystercard::MAX_LIMIT} limit")
+    end
+  end
 end
