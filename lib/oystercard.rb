@@ -3,6 +3,7 @@ class Oystercard
   attr_accessor :balance, :money
   DEFAULT_BALANCE = 0
   MAX_LIMIT = 90
+  MIN_FARE = 1
 
   def initialize(balance = DEFAULT_BALANCE, in_journey = false)
     @balance = balance
@@ -12,10 +13,6 @@ class Oystercard
   def top_up(money)
     raise "Exceeded #{MAX_LIMIT} limit" if @balance + money >= MAX_LIMIT
     @balance += money
-  end
-
-  def deduct(money)
-    @balance -= money
   end
 
   def in_journey?
@@ -28,11 +25,18 @@ class Oystercard
   end
 
   def touch_out
+    deduct(MIN_FARE)
     @in_journey = false
   end
 
   def min_amount
-    fail 'Please top up at least £1' if @balance < 1
-
+    fail "Please top up at least £#{MIN_FARE}" if @balance < 1
   end
+
+  private
+
+  def deduct(min_fare)
+    @balance -= MIN_FARE
+  end
+
 end

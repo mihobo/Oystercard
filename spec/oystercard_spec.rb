@@ -17,16 +17,6 @@ describe Oystercard do
     end
   end
 
-
-  describe '#deduct' do
-    it { is_expected.to respond_to(:deduct).with(1).argument }
-
-    it 'deduct money from the oystercard balance' do
-      oystercard = Oystercard.new(50)
-      expect(oystercard.deduct(20)).to eq 30
-    end
-  end
-
   describe '#in_journey?' do
     it { is_expected.to respond_to(:in_journey?) }
 
@@ -52,14 +42,19 @@ describe Oystercard do
       oystercard = Oystercard.new
       expect(oystercard.touch_out).to eq false
     end
+
+    it 'deducts correct amount when journey\'s complete' do
+    oystercard = Oystercard.new(20)
+    expect{oystercard.touch_out}.to change{oystercard.balance}.by(-1)
   end
+end
 
   describe '#min_amount' do
     it { is_expected.to respond_to(:min_amount)}
 
     it 'raises an error if the balance is less than £1' do
       oystercard = Oystercard.new
-      expect { oystercard.min_amount }.to raise_error('Please top up at least £1')
+      expect { oystercard.min_amount }.to raise_error("Please top up at least £#{Oystercard::MIN_FARE}")
     end
   end
 
