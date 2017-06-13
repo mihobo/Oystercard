@@ -23,6 +23,7 @@ class Oystercard
   end
 
   def touch_in
+    min_amount
     @in_journey = true
   end
 
@@ -30,4 +31,8 @@ class Oystercard
     @in_journey = false
   end
 
+  def min_amount
+    fail 'Please top up at least £1' if @balance < 1
+
+  end
 end

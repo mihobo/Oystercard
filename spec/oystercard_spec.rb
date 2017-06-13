@@ -40,7 +40,7 @@ describe Oystercard do
     it { is_expected.to respond_to(:touch_in) }
 
     it 'returns true when customer touches in' do
-      oystercard = Oystercard.new(0)
+      oystercard = Oystercard.new(2)
       expect(oystercard.touch_in).to eq true
     end
   end
@@ -49,8 +49,17 @@ describe Oystercard do
     it { is_expected.to respond_to(:touch_out) }
 
     it 'returns false when customer touches out' do
-      oystercard = Oystercard.new(0)
-      expect(oystercard.touch_out).to eq false 
+      oystercard = Oystercard.new
+      expect(oystercard.touch_out).to eq false
+    end
+  end
+
+  describe '#min_amount' do
+    it { is_expected.to respond_to(:min_amount)}
+
+    it 'raises an error if the balance is less than £1' do
+      oystercard = Oystercard.new
+      expect { oystercard.min_amount }.to raise_error('Please top up at least £1')
     end
   end
 
