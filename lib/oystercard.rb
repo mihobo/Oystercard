@@ -9,8 +9,8 @@ MAX_BALANCE = 90
   end
 
   def top_up(money)
-    @balance = balance + money
-    raise "Balance £#{@balance}, Limit exceeded" if @balance > MAX_BALANCE
+    @balance += money
+    raise "Balance £#{@balance}, Limit exceeded" if @balance >= MAX_BALANCE
   end
 
 end
