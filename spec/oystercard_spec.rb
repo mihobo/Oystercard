@@ -1,24 +1,19 @@
-require "oystercard.rb"
+require 'oystercard.rb'
 
 describe Oystercard do
+  it { is_expected.to respond_to :balance }
 
-let (:oystercard) {Oystercard.new}
+  it { is_expected.to respond_to(:top_up).with(1).argument }
 
-describe "#balance" do
-    it "has a balance" do
-    expect(oystercard.balance).to eq 0
+  describe '#top_up' do
+    it 'adds money to the oystercard balance' do
+      oystercard = Oystercard.new(10)
+      expect(oystercard.top_up(9)).to eq 19
     end
 
-    it "will top up balance" do
-    oystercard.top_up(17)
-    expect(oystercard.balance).to eq 17
+    it 'doesn\'t allow to top up beyond the limit' do
+      oystercard = Oystercard.new(20)
+      expect { oystercard.top_up(80) }.to raise_error("Exceeded #{Oystercard::MAX_LIMIT} limit")
     end
-end
-
-describe "#top_up" do
-    it "will raise an error if new balance exceeds £90 limit" do
-    expect{oystercard.top_up(91)}.to raise_error("Balance £91, Limit exceeded")
   end
-end
-
 end
