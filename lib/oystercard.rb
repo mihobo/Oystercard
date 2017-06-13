@@ -1,11 +1,12 @@
 # lib/oystercard.rb
 class Oystercard
-  attr_reader :balance, :money
+  attr_accessor :balance, :money
   DEFAULT_BALANCE = 0
   MAX_LIMIT = 90
 
-  def initialize(balance = DEFAULT_BALANCE)
+  def initialize(balance = DEFAULT_BALANCE, in_journey = false)
     @balance = balance
+    @in_journey = in_journey
   end
 
   def top_up(money)
@@ -16,4 +17,17 @@ class Oystercard
   def deduct(money)
     @balance -= money
   end
+
+  def in_journey?
+    @in_journey
+  end
+
+  def touch_in
+    @in_journey = true
+  end
+
+  def touch_out
+    @in_journey = false
+  end
+
 end

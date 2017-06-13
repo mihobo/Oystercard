@@ -17,12 +17,41 @@ describe Oystercard do
     end
   end
 
-  it { is_expected.to respond_to(:deduct).with(1).argument }
 
   describe '#deduct' do
+    it { is_expected.to respond_to(:deduct).with(1).argument }
+
     it 'deduct money from the oystercard balance' do
       oystercard = Oystercard.new(50)
       expect(oystercard.deduct(20)).to eq 30
     end
   end
+
+  describe '#in_journey?' do
+    it { is_expected.to respond_to(:in_journey?) }
+
+    it 'returns false when customer is not travelling' do
+    oystercard = Oystercard.new(1)
+    expect(oystercard.in_journey?).to eq false
+    end
+  end
+
+  describe '#touch_in' do
+    it { is_expected.to respond_to(:touch_in) }
+
+    it 'returns true when customer touches in' do
+      oystercard = Oystercard.new(0)
+      expect(oystercard.touch_in).to eq true
+    end
+  end
+
+  describe '#touch_out' do
+    it { is_expected.to respond_to(:touch_out) }
+
+    it 'returns false when customer touches out' do
+      oystercard = Oystercard.new(0)
+      expect(oystercard.touch_out).to eq false 
+    end
+  end
+
 end
