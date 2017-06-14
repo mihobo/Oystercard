@@ -4,8 +4,8 @@ describe Oystercard do
   let(:card)          { described_class.new(min_fare) }
   let(:max_limit)     { described_class::MAX_LIMIT }
   let(:min_fare)      { described_class::MIN_FARE }
-  let(:entry_station) { double("Aldgate") }
-  let(:exit_station)  { double("Waterloo") }
+  let(:entry_station) { double('Aldgate') }
+  let(:exit_station)  { double('Waterloo') }
 
   describe 'oystercard creation' do
     it 'starts off a new oystercard with no station' do
@@ -47,7 +47,7 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
-    context "Touching in at a station" do
+    context 'Touching in at a station' do
       let(:empty_card) { described_class.new }
 
       it 'raises an error if the balance is less than £1' do
@@ -62,7 +62,7 @@ describe Oystercard do
   end
 
   describe '#touch_out' do
-    context "When touching out" do
+    context 'When touching out' do
       before do
         card.touch_in(entry_station)
         card.touch_out(exit_station)
@@ -86,7 +86,7 @@ describe Oystercard do
       end
 
       it 'shows journey history' do
-        expect(card.view_journey_history).to eq [{entry: entry_station, exit: exit_station}]
+        expect(card.view_journey_history).to eq [{ entry: entry_station, exit: exit_station }]
       end
     end
   end
