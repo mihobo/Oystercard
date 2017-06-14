@@ -1,11 +1,11 @@
 require 'oystercard.rb'
 
 describe Oystercard do
-  let(:card)         { described_class.new(min_fare) }
-  let(:max_limit)    { described_class::MAX_LIMIT }
-  let(:min_fare)     { described_class::MIN_FARE }
-  let(:entry_station)      { double("Aldgate") }
-  let(:exit_station) { double("Waterloo") }
+  let(:card)          { described_class.new(min_fare) }
+  let(:max_limit)     { described_class::MAX_LIMIT }
+  let(:min_fare)      { described_class::MIN_FARE }
+  let(:entry_station) { double("Aldgate") }
+  let(:exit_station)  { double("Waterloo") }
 
   describe 'oystercard creation' do
     it 'starts off a new oystercard with no station' do
@@ -54,7 +54,7 @@ describe Oystercard do
         expect { empty_card.touch_in(entry_station) }.to raise_error("Please top up at least £#{min_fare}")
       end
 
-      it 'returns the station name where you touch in' do
+      it 'records the start of the journey' do
         card.touch_in(entry_station)
         expect(card.entry_station).to eq entry_station
       end
@@ -72,16 +72,8 @@ describe Oystercard do
         expect(card.entry_station).to be_nil
       end
 
-      it 'returns false when customer touches out' do
-        expect(card).to_not be_in_journey
-      end
-
       it 'deducts correct amount when journey\'s complete' do
         expect(card.balance).to eq 0
-      end
-
-      it 'returns the station name when you touch out' do
-        expect(card.exit_station).to eq exit_station
       end
     end
   end
