@@ -7,7 +7,7 @@ class Oystercard
 
   def initialize(balance = DEFAULT_BALANCE)
     @balance          = balance
-    @current_journe   = {}
+    @current_journey   = {}
     @journey_history  = []
   end
 

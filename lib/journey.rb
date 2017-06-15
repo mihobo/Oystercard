@@ -2,10 +2,12 @@ require 'station'
 
 class Journey
   attr_reader :entry_station, :exit_station
+  STD_FARE = 1
 
   def initialize
     @entry_station = nil
     @exit_station = nil
+
   end
 
   def start_at(station)
@@ -20,4 +22,7 @@ class Journey
     !!entry_station && exit_station
   end
 
+  def fare
+    complete? ? STD_FARE : nil
+  end
 end
