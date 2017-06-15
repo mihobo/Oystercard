@@ -7,7 +7,7 @@ class Oystercard
 
   def initialize(balance = DEFAULT_BALANCE)
     @balance          = balance
-    @current_journey  = {}
+    @current_journe   = {}
     @journey_history  = []
   end
 
@@ -30,12 +30,10 @@ class Oystercard
 
   def touch_in(station)
     raise "Please top up at least £#{MIN_FARE}" if @balance < 1
-    record_start(station)
   end
 
   def touch_out(station)
     deduct(MIN_FARE)
-    record_end(station)
     record_journey
   end
 
@@ -47,14 +45,6 @@ class Oystercard
 
   def deduct(min_fare)
     @balance -= MIN_FARE
-  end
-
-  def record_start(station)
-    @current_journey[:entry] = station
-  end
-
-  def record_end(station)
-    @current_journey[:exit] = station
   end
 
   def record_journey
