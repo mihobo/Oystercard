@@ -4,6 +4,7 @@ describe Oystercard do
   let(:card)          { described_class.new(min_fare) }
   let(:max_limit)     { described_class::MAX_LIMIT }
   let(:min_fare)      { described_class::MIN_FARE }
+  let(:journey)       { double("Journey") }
   let(:entry_station) { double('Aldgate') }
   let(:exit_station)  { double('Waterloo') }
 
@@ -41,8 +42,21 @@ describe Oystercard do
       let(:empty_card) { described_class.new }
 
       it 'raises an error if the balance is less than £1' do
-        expect { empty_card.touch_in(entry_station) }.to raise_error("Please top up at least £#{min_fare}")
+        expect { empty_card.touch_in(entry_station, journey) }.to raise_error("Please top up at least £#{min_fare}")
       end
+
+      context "when someone has touched in but not out" do
+
+        before do
+          allow(entry_station).to receive(:entry_station).and_return("Aldgate")
+          allow(journey).to receive(:entry_station).and_return("Aldgate")
+          allow(journey).to receive(:start_at).with(entry_station)
+        end
+
+      it "charges a penalty fare" do
+        expect{card.touch_in(entry_station, journey)}.to change{card.balance}.from(1).to(-5)
+      end
+    end
 
     end
   end
@@ -50,7 +64,8 @@ describe Oystercard do
   describe '#touch_out' do
     context 'When touching out' do
       before do
-        card.touch_in(entry_station)
+        allow(journey).to receive(:entry_station).and_return(nil)
+        card.touch_in(entry_station, journey)
         card.touch_out(exit_station)
       end
 

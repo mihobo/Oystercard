@@ -28,8 +28,11 @@ class Oystercard
     !!entry_station
   end
 
-  def touch_in(station)
+  def touch_in(station, journey)
     raise "Please top up at least £#{MIN_FARE}" if @balance < 1
+    unless journey.entry_station.nil?
+      deduct(6)
+    end
   end
 
   def touch_out(station)
@@ -43,8 +46,8 @@ class Oystercard
 
   private
 
-  def deduct(min_fare)
-    @balance -= MIN_FARE
+  def deduct(fare)
+    @balance -= fare
   end
 
   def record_journey

@@ -4,6 +4,7 @@ describe Journey do
   let(:entry_station) { double('Aldgate') }
   let(:exit_station) { double('Bank') }
   let(:std_fare) { described_class::STD_FARE }
+  let(:penalty_fare) { described_class::PENALTY_FARE }
 
   subject(:journey) { described_class.new }
 
@@ -75,6 +76,7 @@ describe Journey do
   end
 
   describe '#fare' do
+
     context "when the journey is complete" do
 
       before do
@@ -84,10 +86,28 @@ describe Journey do
         journey.finish_at(exit_station)
       end
 
-
       it 'returns the standard fare' do
         expect(journey.fare).to eq std_fare
       end
+
+    end
+
+    context "when the journey is not complete" do
+
+         context "because no touch in" do
+
+      before do
+        allow(exit_station).to receive(:name).and_return('Bank')
+        journey.finish_at(exit_station)
+      end
+
+      it 'returns a penalty fare' do
+        expect(journey.fare).to eq penalty_fare
+      end
+
     end
   end
+end
+
+
 end
