@@ -1,4 +1,7 @@
 # lib/oystercard.rb
+require_relative 'journey'
+require_relative 'station'
+
 class Oystercard
   attr_reader :balance, :journey_history
   DEFAULT_BALANCE = 0
@@ -6,17 +9,18 @@ class Oystercard
   MIN_FARE        = 1
 
   def initialize(balance = DEFAULT_BALANCE)
-    @balance          = balance
-    @current_journey   = {}
-    @journey_history  = []
+    @balance = balance
+    @current_startpoint = nil
+    @current_endpoint = nil
+    @journey_history = []
   end
 
-  def entry_station
-    @current_journey[:entry]
+  def current_startpoint
+    @current_startpoint
   end
 
-  def exit_station
-    @current_journey[:exit]
+  def current_endpoint
+    @current_endpoint
   end
 
   def top_up(money)
@@ -29,14 +33,24 @@ class Oystercard
   end
 
   def touch_in(station, journey)
-    raise "Please top up at least £#{MIN_FARE}" if @balance < 1
-    unless journey.entry_station.nil?
-      deduct(6)
-    end
+    raise "Please top up at least £#{MIN_FARE}" if @balance < MIN_FARE.to_i
+    check_in(station, journey)
   end
 
-  def touch_out(station)
-    deduct(MIN_FARE)
+  def check_in(station, journey)
+    journey.start_at(station)
+    penalty?(journey)
+    @current_startpoint = station
+  end
+
+  def penalty?(journey)
+    !@current_startpoint.nil? ? (record_journey; deduct(journey.fare)) : nil
+  end
+
+  def touch_out(station, journey)
+    journey.finish_at(station)
+    deduct(journey.fare)
+    @current_endpoint = station
     record_journey
   end
 
@@ -51,7 +65,8 @@ class Oystercard
   end
 
   def record_journey
-    @journey_history << { entry: entry_station, exit: exit_station }
-    @current_journey.each_key { |k| @current_journey.delete(k) }
+    @journey_history << { entry: @current_startpoint, exit: @current_endpoint }
+    @current_startpoint = nil
+    @current_endpoint = nil
   end
 end

@@ -1,5 +1,4 @@
-require 'station'
-
+# lib/journey.rb
 class Journey
   attr_reader :entry_station, :exit_station
   STD_FARE = 1
@@ -8,7 +7,6 @@ class Journey
   def initialize
     @entry_station = nil
     @exit_station = nil
-
   end
 
   def start_at(station)
@@ -26,5 +24,4 @@ class Journey
   def fare
     complete? ? STD_FARE : PENALTY_FARE
   end
-
 end

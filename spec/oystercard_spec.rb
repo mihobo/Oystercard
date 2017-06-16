@@ -1,23 +1,21 @@
 require 'oystercard.rb'
+require 'journey'
+require 'station'
 
 describe Oystercard do
-  let(:card)          { described_class.new(min_fare) }
-  let(:max_limit)     { described_class::MAX_LIMIT }
-  let(:min_fare)      { described_class::MIN_FARE }
-  let(:journey)       { double("Journey") }
+  let(:card) { described_class.new(min_fare) }
+  let(:max_limit) { described_class::MAX_LIMIT }
+  let(:min_fare) { described_class::MIN_FARE }
+  let(:journey) { double('Journey') }
   let(:entry_station) { double('Aldgate') }
-  let(:exit_station)  { double('Waterloo') }
+  let(:exit_station) { double('Waterloo') }
 
   describe 'oystercard creation' do
     it 'starts off a new oystercard with no station' do
-      expect(card.entry_station).to eq nil
+      expect(card.current_startpoint).to eq nil
     end
 
     describe '#journey_history' do
-      it 'is an array' do
-        expect(card.journey_history).to be_a Array
-      end
-
       it 'starts off empty' do
         expect(card.journey_history).to be_empty
       end
@@ -36,7 +34,6 @@ describe Oystercard do
     end
   end
 
-
   describe '#touch_in' do
     context 'Touching in at a station' do
       let(:empty_card) { described_class.new }
@@ -45,19 +42,21 @@ describe Oystercard do
         expect { empty_card.touch_in(entry_station, journey) }.to raise_error("Please top up at least £#{min_fare}")
       end
 
-      context "when someone has touched in but not out" do
-
+      context 'when someone has touched in but not out' do
         before do
-          allow(entry_station).to receive(:entry_station).and_return("Aldgate")
-          allow(journey).to receive(:entry_station).and_return("Aldgate")
+          allow(entry_station).to receive(:entry_station).and_return('Aldgate')
+          allow(journey).to receive(:entry_station).and_return('Aldgate')
           allow(journey).to receive(:start_at).with(entry_station)
         end
 
-      it "charges a penalty fare" do
-        expect{card.touch_in(entry_station, journey)}.to change{card.balance}.from(1).to(-5)
+        it 'charges a penalty fare' do
+          station = Station.new('home', 1)
+          trip = Journey.new
+          allow(journey).to receive(:fare)
+          card.touch_in(station, trip)
+          expect { card.touch_in(station, trip) }.to change { card.balance }.from(1).to(-5)
+        end
       end
-    end
-
     end
   end
 
@@ -65,10 +64,12 @@ describe Oystercard do
     context 'When touching out' do
       before do
         allow(journey).to receive(:entry_station).and_return(nil)
-        card.touch_in(entry_station, journey)
-        card.touch_out(exit_station)
+        allow(journey).to receive(:exit_station).and_return(nil)
+        station = Station.new('home', 1)
+        trip = Journey.new
+        card.touch_in(station, trip)
+        card.touch_out(station, trip)
       end
-
 
       it 'deducts correct amount when journey\'s complete' do
         expect(card.balance).to eq 0
@@ -77,15 +78,13 @@ describe Oystercard do
   end
 
   describe '#view_journey_history' do
-    context 'After a complete journey' do
-      before do
-        card.touch_in(entry_station)
-        card.touch_out(exit_station)
-      end
-
-      xit 'shows journey history' do
-        expect(card.view_journey_history).to eq [{ entry: entry_station, exit: exit_station }]
-      end
+    it 'shows journey history' do
+      home = Station.new('home', 1)
+      school = Station.new('school', 2)
+      trip = Journey.new
+      card.touch_in(home, trip)
+      card.touch_out(school, trip)
+      expect(card.view_journey_history).to eq [{ entry: home, exit: school }]
     end
   end
 end
